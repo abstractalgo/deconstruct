@@ -1,38 +1,6 @@
 ;(() => {
   const eventsBuffer = []
 
-  const ALLOWED_EVENTS = [
-    // keyboard events
-    "keydown",
-    "keyup",
-
-    // mouse events
-    "mousedown",
-    "mouseup",
-    "click",
-    "dblclick",
-    // "mousemove",
-    "contextmenu",
-
-    // touch events
-    // "touchstart",
-    // "touchend",
-    // "touchmove",
-    // "touchcancel",
-
-    // scroll events
-    // "scroll",
-    // "wheel"
-
-    // clipboard events
-    // "cut",
-    // "copy",
-    // "paste",
-
-    // window events
-    // "resize",
-  ]
-
   const KEY_META = [
     // key
     "key",
@@ -85,26 +53,48 @@
   ]
 
   const EVENTS_META = {
+    // keyboard events
     keydown: KEY_META,
     keyup: KEY_META,
 
+    // mouse events
     mousedown: MOUSE_META,
     mouseup: MOUSE_META,
     click: MOUSE_META,
     dblclick: MOUSE_META,
-    mousemove: MOUSE_META,
+    // mousemove: MOUSE_META,
     contextmenu: MOUSE_META,
+
+    // touch events
+    // touchstart: [],
+    // touchend: [],
+    // touchmove: [],
+    // touchcancel: [],
+
+    // scroll events
+    // scroll: [],
+    // wheel: [],
+
+    // clipboard events
+    // cut: [],
+    // copy: [],
+    // paste: [],
+
+    // window events
+    // resize: [],
   }
 
-  const oldEL = window.addEventListener
+  const ALLOWED_EVENTS = Object.keys(EVENTS_META)
+
+  const _original_aEL = window.addEventListener
 
   window.addEventListener = (type, listener, options) => {
     if (!ALLOWED_EVENTS.includes(type)) {
-      oldEL(type, listener, options)
+      _original_aEL(type, listener, options)
       return
     }
 
-    oldEL(
+    _original_aEL(
       type,
       (...args) => {
         const eventDetails = {}
@@ -116,7 +106,7 @@
           type: type,
           meta: eventDetails,
         })
-        console.log(JSON.stringify(eventsBuffer, null, 4))
+        // console.log(JSON.stringify(eventsBuffer, null, 4))
         listener(...args)
       },
       options
