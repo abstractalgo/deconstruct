@@ -1,5 +1,5 @@
 ;(() => {
-  const KEY_META = [
+  const KEY_EVENT_PROPS = [
     // key
     "key",
     "keyCode",
@@ -16,10 +16,10 @@
     "defaultPrevented",
     "repeat",
     // target
-    // ...
+    // "target",
   ]
 
-  const MOUSE_META = [
+  const MOUSE_EVENT_PROPS = [
     // buttons
     "button",
     "which",
@@ -47,21 +47,21 @@
     "movementX",
     "movementY",
     // target
-    // ...
+    // "target",
   ]
 
-  const EVENTS_META = {
+  const EVENTS_PROPS = {
     // keyboard events
-    keydown: KEY_META,
-    keyup: KEY_META,
+    keydown: KEY_EVENT_PROPS,
+    keyup: KEY_EVENT_PROPS,
 
     // mouse events
-    mousedown: MOUSE_META,
-    mouseup: MOUSE_META,
-    click: MOUSE_META,
-    dblclick: MOUSE_META,
-    // mousemove: MOUSE_META,
-    contextmenu: MOUSE_META,
+    mousedown: MOUSE_EVENT_PROPS,
+    mouseup: MOUSE_EVENT_PROPS,
+    click: MOUSE_EVENT_PROPS,
+    dblclick: MOUSE_EVENT_PROPS,
+    mousemove: MOUSE_EVENT_PROPS,
+    contextmenu: MOUSE_EVENT_PROPS,
 
     // touch events
     // touchstart: [],
@@ -82,7 +82,7 @@
     // resize: [],
   }
 
-  const ALLOWED_EVENTS = Object.keys(EVENTS_META)
+  const ALLOWED_EVENTS = Object.keys(EVENTS_PROPS)
 
   // --- recorder --------------------------------------------------------------
 
@@ -101,6 +101,31 @@
     eventsBuffer = []
   }
 
+  window.replay = () => {
+    eventsBuffer.forEach((event) => {
+      if (["click", "mousedown", "mouseup", "mousemove"].includes(event.type)) {
+        const ev = new MouseEvent(event.type, {
+          ...event.meta,
+        })
+        const delay = event.timestamp - eventsBuffer[0].timestamp + 2000
+        setTimeout(() => {
+          console.log(event.type)
+          dispatchEvent(ev)
+        }, delay)
+      }
+      if (["keydown", "keyup"].includes(event.type)) {
+        const ev = new KeyboardEvent(event.type, {
+          ...event.meta,
+        })
+        const delay = event.timestamp - eventsBuffer[0].timestamp + 2000
+        setTimeout(() => {
+          console.log(event.type)
+          dispatchEvent(ev)
+        }, delay)
+      }
+    })
+  }
+
   const _original_aEL = window.addEventListener
 
   window.addEventListener = (type, listener, options) => {
@@ -113,10 +138,10 @@
       type,
       (...args) => {
         const eventDetails = {}
-        EVENTS_META[type].forEach(
+        EVENTS_PROPS[type].forEach(
           (detail) => (eventDetails[detail] = args[0][detail])
         )
-        // pushToBuffer(type, eventDetails)
+        pushToBuffer(type, eventDetails)
         listener(...args)
       },
       options

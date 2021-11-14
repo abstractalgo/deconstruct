@@ -22,6 +22,15 @@ const Home: NextPage = () => {
         >
           flush buffer
         </button>
+
+        <button
+          onClick={() => {
+            // @ts-ignore
+            window['replay']()
+          }}
+        >
+          replay
+        </button>
         <hr />
         <h1>hi</h1>
         <p>input</p>
