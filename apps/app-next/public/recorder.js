@@ -86,7 +86,20 @@
 
   // --- recorder --------------------------------------------------------------
 
-  const eventsBuffer = []
+  let eventsBuffer = []
+  const pushToBuffer = (event, meta) => {
+    eventsBuffer.push({
+      type: event,
+      meta: meta,
+      browser: window.navigator.userAgent,
+      timestamp: Date.now(),
+    })
+  }
+
+  window.deconstruct_flush = () => {
+    console.log(JSON.stringify(eventsBuffer, null, 4))
+    eventsBuffer = []
+  }
 
   const _original_aEL = window.addEventListener
 
@@ -103,13 +116,7 @@
         EVENTS_META[type].forEach(
           (detail) => (eventDetails[detail] = args[0][detail])
         )
-        eventsBuffer.push({
-          type: type,
-          meta: eventDetails,
-          browser: window.navigator.userAgent,
-          timestamp: Date.now(),
-        })
-        // console.log(JSON.stringify(eventsBuffer, null, 4))
+        // pushToBuffer(type, eventDetails)
         listener(...args)
       },
       options
@@ -117,4 +124,25 @@
   }
 
   ALLOWED_EVENTS.forEach((event) => window.addEventListener(event, () => {}))
+
+  const _original_fetch = window.fetch
+
+  window.fetch = (input, init) => {
+    pushToBuffer("request", {
+      input: input,
+      init: init,
+    })
+
+    return _original_fetch(input, init).then(async (res) => {
+      try {
+        const responseCopy = res.clone()
+        pushToBuffer("response", {
+          data: await responseCopy.json(),
+        })
+      } catch (e) {
+        console.log(e)
+      }
+      return res
+    })
+  }
 })()

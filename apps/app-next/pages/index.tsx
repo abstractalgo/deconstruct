@@ -14,6 +14,15 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
+        <button
+          onClick={() => {
+            // @ts-ignore
+            window['deconstruct_flush']()
+          }}
+        >
+          flush buffer
+        </button>
+        <hr />
         <h1>hi</h1>
         <p>input</p>
 
@@ -29,9 +38,31 @@ const Home: NextPage = () => {
         />
 
         <p>button</p>
-        <button onClick={()=>{
-          console.log("btn!")
-        }}>click me</button>
+        <button
+          onClick={() => {
+            console.log("btn!")
+          }}
+        >
+          click me
+        </button>
+
+        <p>fetch</p>
+        <button
+          onClick={async () => {
+            const bla = await fetch(
+              "https://random-data-api.com/api/users/random_user",
+              {
+                headers: {
+                  "Accept": "application/json"
+                }
+              }
+            )
+            const res = await bla.json()
+            console.log(res.first_name + " " + res.last_name)
+          }}
+        >
+          fetch!
+        </button>
       </main>
     </div>
   )
