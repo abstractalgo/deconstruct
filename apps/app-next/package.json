@@ -1,5 +1,5 @@
 {
-  "name": "playground-next",
+  "name": "app-next",
   "private": true,
   "scripts": {
     "dev": "next dev",
