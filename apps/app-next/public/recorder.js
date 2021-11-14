@@ -1,6 +1,4 @@
 ;(() => {
-  const eventsBuffer = []
-
   const KEY_META = [
     // key
     "key",
@@ -86,6 +84,10 @@
 
   const ALLOWED_EVENTS = Object.keys(EVENTS_META)
 
+  // --- recorder --------------------------------------------------------------
+
+  const eventsBuffer = []
+
   const _original_aEL = window.addEventListener
 
   window.addEventListener = (type, listener, options) => {
@@ -98,13 +100,14 @@
       type,
       (...args) => {
         const eventDetails = {}
-        console.log(type)
         EVENTS_META[type].forEach(
           (detail) => (eventDetails[detail] = args[0][detail])
         )
         eventsBuffer.push({
           type: type,
           meta: eventDetails,
+          browser: window.navigator.userAgent,
+          timestamp: Date.now(),
         })
         // console.log(JSON.stringify(eventsBuffer, null, 4))
         listener(...args)
