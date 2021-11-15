@@ -13,7 +13,7 @@ class MyDocument extends Document<{ isProduction: boolean }> {
           <link rel="icon" href="/favicon.png" />
         </Head>
         <body>
-          <script src="recorder.js" async/>
+          <script src="/recorder.js" async/>
           <Main />
           <NextScript />
         </body>
