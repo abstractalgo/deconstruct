@@ -11,7 +11,8 @@ const Home: NextPage = () => {
       </Head>
 
       <h1>deconstruct</h1>
-      <p>welcome to deconstruct landing page</p>
+      
+      <p>Record.<br />Replay.<br />Debug.</p>
     </div>
   )
 }
