@@ -126,6 +126,8 @@
     })
   }
 
+  // --- addEventListener() wrapper
+
   const _original_aEL = window.addEventListener
 
   window.addEventListener = (type, listener, options) => {
@@ -150,6 +152,8 @@
 
   ALLOWED_EVENTS.forEach((event) => window.addEventListener(event, () => {}))
 
+  // --- fetch() wrapper
+
   const _original_fetch = window.fetch
 
   window.fetch = (input, init) => {
@@ -170,4 +174,37 @@
       return res
     })
   }
+
+  // --- XMLHttpRequest() wrapper
+
+  // const _original_onreadystatechange =
+  // XMLHttpRequest.prototype._onreadystatechange =
+  //   XMLHttpRequest.prototype.onreadystatechange
+  // XMLHttpRequest.prototype._original_onreadystatechange = _original_onreadystatechange
+  // XMLHttpRequest.prototype.send = function (...args) {
+  //   console.log(this, args)
+  //   // console.log("KURAC")
+  // }
+
+  // const _original_xhr = window.XMLHttpRequest
+  // window.XMLHttpRequest = function () {
+  //   const xhr = new _original_xhr()
+  //   xhr.onreadystatechange = () => {
+  //     console.log("jebi")
+  //   }
+  //   return xhr
+  // }
+
+  // XMLHttpRequest.constructor = function () {
+  //   console.log("new")
+  // }
+  // XMLHttpRequest.prototype.addEventListener = function () {
+  //   console.log("aEL")
+  // }
+  // XMLHttpRequest.prototype.onreadystatechange = function (...args) {
+  //   // console.log("oRSC")
+  //   // console.log("---", this.readyState)
+  //   // this._onreadystatechange(...args)
+  //   // _original_onreadystatechange.call(this, ...args)
+  // }
 })()

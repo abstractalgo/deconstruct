@@ -17,7 +17,7 @@ const Home: NextPage = () => {
         <button
           onClick={() => {
             // @ts-ignore
-            window['deconstruct_flush']()
+            window["deconstruct_flush"]()
           }}
         >
           flush buffer
@@ -26,7 +26,7 @@ const Home: NextPage = () => {
         <button
           onClick={() => {
             // @ts-ignore
-            window['replay']()
+            window["replay"]()
           }}
         >
           replay
@@ -62,8 +62,8 @@ const Home: NextPage = () => {
               "https://random-data-api.com/api/users/random_user",
               {
                 headers: {
-                  "Accept": "application/json"
-                }
+                  Accept: "application/json",
+                },
               }
             )
             const res = await bla.json()
@@ -71,6 +71,52 @@ const Home: NextPage = () => {
           }}
         >
           fetch!
+        </button>
+
+        <p>XMLHttpRequest</p>
+        <button
+          onClick={async () => {
+            const xhr = new XMLHttpRequest()
+            // Client has been created. open() not called yet.
+            xhr.readyState === XMLHttpRequest.UNSENT && console.log("UNSENT")
+            xhr.onreadystatechange = (e) => {
+              let state = null
+              switch (xhr.readyState) {
+                case XMLHttpRequest.OPENED:
+                  // open() has been called.
+                  // xhr.onloadstart()
+                  state = "OPENED"
+                  break
+                case XMLHttpRequest.HEADERS_RECEIVED:
+                  // send() has been called, and headers and status are available.
+                  state = "HEADERS_RECEIVED"
+                  break
+                case XMLHttpRequest.LOADING:
+                  // Downloading; responseText holds partial data.
+                  // xhr.onprogress()
+                  state = "LOADING"
+                  break
+                case XMLHttpRequest.DONE:
+                  // The operation is complete.
+                  // xhr.onloadend()
+                  // xhr.ontimeout()
+                  // xhr.onabort()
+                  state = "DONE"
+                  // console.log(JSON.stringify(xhr.getAllResponseHeaders()))
+                  break
+              }
+              console.log(state, xhr.status)
+            }
+            // xhr.timeout = 500
+            // xhr.withCredentials = false
+            // xhr.upload.addEventListener(...)
+            xhr.open("GET", "https://random-data-api.com/api/users/random_user" /* , async, username, password */)
+            xhr.setRequestHeader("Accept", "application/json")
+            xhr.send(/* body */)
+            // xhr.abort()
+          }}
+        >
+          send
         </button>
       </main>
     </div>
